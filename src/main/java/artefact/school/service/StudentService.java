@@ -1,6 +1,5 @@
 package artefact.school.service;
 
-import artefact.school.dto.FacultyDtoIn;
 import artefact.school.dto.FacultyDtoOut;
 import artefact.school.dto.StudentDtoIn;
 import artefact.school.dto.StudentDtoOut;
@@ -8,7 +7,9 @@ import artefact.school.entity.Faculty;
 import artefact.school.entity.Student;
 import artefact.school.exception.FacultyNotFoundException;
 import artefact.school.exception.StudentNotFondException;
+import artefact.school.maper.FacultyMapper;
 import artefact.school.maper.StudentMapper;
+import artefact.school.repository.FacultyRepository;
 import artefact.school.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,17 @@ public class StudentService {
 
     private final StudentMapper studentMapper;
 
+    private final FacultyRepository facultyRepository;
+
+    private final FacultyMapper facultyMapper;
 
 
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper) {
+
+    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, FacultyRepository facultyRepository, FacultyMapper facultyMapper) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
+        this.facultyRepository = facultyRepository;
+        this.facultyMapper = facultyMapper;
     }
 
 
@@ -42,6 +49,12 @@ public class StudentService {
                 .map(oldStudent -> {
                     oldStudent.setAge(studentDtoIn.getAge());
                     oldStudent.setName(studentDtoIn.getName());
+                    Optional.ofNullable(studentDtoIn.getFacultyId())
+                            .ifPresent(facultyId ->
+                                    oldStudent.setFaculty(facultyRepository.findById(facultyId)
+                                    .orElseThrow(()-> new FacultyNotFoundException(facultyId))
+                                    )
+                            );
                     return studentMapper.toDto(studentRepository.save(oldStudent));
                 })
                 .orElseThrow(()->new StudentNotFondException(id));
@@ -66,5 +79,19 @@ public class StudentService {
                 .orElseGet(studentRepository::findAll).stream()
                 .map(studentMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+
+    public List<StudentDtoOut> findByAgeBetween(int ageMin, int ageMax) {
+        return studentRepository.findAllByAgeBetween(ageMin, ageMax).stream()
+                .map(studentMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public FacultyDtoOut findFaculty(long id) {
+        return studentRepository.findById(id)
+                .map(Student::getFaculty)
+                .map(facultyMapper::toDto)
+                .orElseThrow(()->new StudentNotFondException(id));
     }
 }

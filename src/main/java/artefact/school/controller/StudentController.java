@@ -1,5 +1,6 @@
 package artefact.school.controller;
 
+import artefact.school.dto.FacultyDtoOut;
 import artefact.school.dto.StudentDtoIn;
 import artefact.school.dto.StudentDtoOut;
 import artefact.school.entity.Student;
@@ -36,5 +37,14 @@ public class StudentController {
     @GetMapping
     public List<StudentDtoOut> findAll(@RequestParam( required = false)Integer age){
         return studentService.findAll(age);
+    }
+
+    @GetMapping("/filter")
+    public List<StudentDtoOut> findByAgeBetween(@RequestParam int ageMin, @RequestParam int ageMax){
+        return studentService.findByAgeBetween(ageMin,ageMax);
+    }
+    @GetMapping("/{id}/faculty")
+    public FacultyDtoOut findFaculty(@PathVariable("id") long id){
+        return studentService.findFaculty(id);
     }
 }
