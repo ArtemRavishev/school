@@ -1,16 +1,18 @@
 package artefact.school.service;
 
-import artefact.school.dto.FacultyDtoIn;
 import artefact.school.dto.FacultyDtoOut;
 import artefact.school.dto.StudentDtoIn;
 import artefact.school.dto.StudentDtoOut;
-import artefact.school.entity.Faculty;
+import artefact.school.entity.Avatar;
 import artefact.school.entity.Student;
 import artefact.school.exception.FacultyNotFoundException;
 import artefact.school.exception.StudentNotFondException;
+import artefact.school.maper.FacultyMapper;
 import artefact.school.maper.StudentMapper;
+import artefact.school.repository.FacultyRepository;
 import artefact.school.repository.StudentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,11 +25,28 @@ public class StudentService {
 
     private final StudentMapper studentMapper;
 
+    private final FacultyRepository facultyRepository;
+
+    private final FacultyMapper facultyMapper;
+    private final AvatarService avatarService;
 
 
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper) {
+
+    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, FacultyRepository facultyRepository, FacultyMapper facultyMapper, AvatarService avatarService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
+        this.facultyRepository = facultyRepository;
+        this.facultyMapper = facultyMapper;
+        this.avatarService = avatarService;
+    }
+
+    public  StudentDtoOut uploadAvatar(long id,MultipartFile multipartFile) {
+        Student student  = studentRepository.findById(id)
+                .orElseThrow(()->new StudentNotFondException(id));
+        Avatar avatar =avatarService.create(student,multipartFile);
+        StudentDtoOut studentDtoOut = studentMapper.toDto(student);
+        studentDtoOut.setAvatarUrl("/avatars/"+avatar.getId()+"/from-db");
+        return studentDtoOut;
     }
 
 
@@ -42,6 +61,12 @@ public class StudentService {
                 .map(oldStudent -> {
                     oldStudent.setAge(studentDtoIn.getAge());
                     oldStudent.setName(studentDtoIn.getName());
+                    Optional.ofNullable(studentDtoIn.getFacultyId())
+                            .ifPresent(facultyId ->
+                                    oldStudent.setFaculty(facultyRepository.findById(facultyId)
+                                    .orElseThrow(()-> new FacultyNotFoundException(facultyId))
+                                    )
+                            );
                     return studentMapper.toDto(studentRepository.save(oldStudent));
                 })
                 .orElseThrow(()->new StudentNotFondException(id));
@@ -66,5 +91,19 @@ public class StudentService {
                 .orElseGet(studentRepository::findAll).stream()
                 .map(studentMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+
+    public List<StudentDtoOut> findByAgeBetween(int ageMin, int ageMax) {
+        return studentRepository.findAllByAgeBetween(ageMin, ageMax).stream()
+                .map(studentMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public FacultyDtoOut findFaculty(long id) {
+        return studentRepository.findById(id)
+                .map(Student::getFaculty)
+                .map(facultyMapper::toDto)
+                .orElseThrow(()->new StudentNotFondException(id));
     }
 }

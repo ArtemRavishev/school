@@ -5,16 +5,31 @@ package artefact.school.maper;
 import artefact.school.dto.StudentDtoIn;
 import artefact.school.dto.StudentDtoOut;
 import artefact.school.entity.Student;
+import artefact.school.exception.FacultyNotFoundException;
+import artefact.school.repository.FacultyRepository;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class StudentMapper {
+
+    private final FacultyMapper facultyMapper;
+
+    private final FacultyRepository facultyRepository;
+
+    public StudentMapper(FacultyMapper facultyMapper, FacultyRepository facultyRepository) {
+        this.facultyMapper = facultyMapper;
+        this.facultyRepository = facultyRepository;
+    }
 
     public StudentDtoOut toDto(Student student) {
         StudentDtoOut studentDtoOut= new StudentDtoOut();
         studentDtoOut.setId(student.getId());
         studentDtoOut.setName(student.getName());
         studentDtoOut.setAge(student.getAge());
+        Optional.ofNullable(student.getFaculty())
+                .ifPresent(faculty -> studentDtoOut.setFaculty(facultyMapper.toDto(faculty)));
         return studentDtoOut;
     }
 
@@ -23,6 +38,9 @@ public class StudentMapper {
         Student student = new Student();
         student.setAge(studentDtoIn.getAge());
         student.setName(studentDtoIn.getName());
+        Optional.ofNullable(studentDtoIn.getFacultyId())
+                .ifPresent(facultyId->facultyRepository.findById(facultyId)
+                        .orElseThrow(()->new FacultyNotFoundException(facultyId)));
         return student;
     }
 }
