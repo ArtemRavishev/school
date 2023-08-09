@@ -5,8 +5,11 @@ import artefact.school.dto.StudentDtoIn;
 import artefact.school.dto.StudentDtoOut;
 import artefact.school.entity.Student;
 import artefact.school.service.StudentService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.plaf.multi.MultiDesktopPaneUI;
 import java.util.List;
 @RestController
 @RequestMapping("/students")
@@ -46,5 +49,12 @@ public class StudentController {
     @GetMapping("/{id}/faculty")
     public FacultyDtoOut findFaculty(@PathVariable("id") long id){
         return studentService.findFaculty(id);
+    }
+
+    @PatchMapping(value = "/{id}/avatar",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public StudentDtoOut uploadAvatar(@PathVariable long id ,
+        @RequestPart("avatar") MultipartFile multipartFile){
+        return studentService.uploadAvatar(id,multipartFile);
+
     }
 }

@@ -8,15 +8,15 @@ public class StudentDtoOut {
 
     private FacultyDtoOut faculty;
 
-    public StudentDtoOut(long id, String name, int age, FacultyDtoOut faculty) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.faculty = faculty;
+    private String avatarUrl;
+
+
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-
-    public StudentDtoOut() {
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public long getId() {

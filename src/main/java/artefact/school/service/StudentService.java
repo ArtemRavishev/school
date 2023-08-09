@@ -3,7 +3,7 @@ package artefact.school.service;
 import artefact.school.dto.FacultyDtoOut;
 import artefact.school.dto.StudentDtoIn;
 import artefact.school.dto.StudentDtoOut;
-import artefact.school.entity.Faculty;
+import artefact.school.entity.Avatar;
 import artefact.school.entity.Student;
 import artefact.school.exception.FacultyNotFoundException;
 import artefact.school.exception.StudentNotFondException;
@@ -12,6 +12,7 @@ import artefact.school.maper.StudentMapper;
 import artefact.school.repository.FacultyRepository;
 import artefact.school.repository.StudentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,14 +28,25 @@ public class StudentService {
     private final FacultyRepository facultyRepository;
 
     private final FacultyMapper facultyMapper;
+    private final AvatarService avatarService;
 
 
 
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, FacultyRepository facultyRepository, FacultyMapper facultyMapper) {
+    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, FacultyRepository facultyRepository, FacultyMapper facultyMapper, AvatarService avatarService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.facultyRepository = facultyRepository;
         this.facultyMapper = facultyMapper;
+        this.avatarService = avatarService;
+    }
+
+    public  StudentDtoOut uploadAvatar(long id,MultipartFile multipartFile) {
+        Student student  = studentRepository.findById(id)
+                .orElseThrow(()->new StudentNotFondException(id));
+        Avatar avatar =avatarService.create(student,multipartFile);
+        StudentDtoOut studentDtoOut = studentMapper.toDto(student);
+        studentDtoOut.setAvatarUrl("/avatars/"+avatar.getId()+"/from-db");
+        return studentDtoOut;
     }
 
 
