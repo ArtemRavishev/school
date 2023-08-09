@@ -9,6 +9,6 @@ public class AvatarNotFoundException extends RuntimeException{
     }
     @Override
     public String getMessage() {
-        return " Avatar с id=" + id + " не найден";
+        return "  Avatar с id=" + id + " не найден";
     }
 }
