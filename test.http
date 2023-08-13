@@ -1,1 +1,40 @@
 GET localhost:8080/swagger-ui/index.html
+###
+POST http://localhost:8080/students
+Content-Type: application/json
+
+{
+  "name": "Саша",
+  "age": 21
+}
+###
+GET http://localhost:8080/students/1
+
+###
+PUT http://localhost:8080/students/1
+Content-Type: application/json
+
+{  "id":5,
+  "name": "Ева",
+  "age": 23
+}
+
+###
+DELETE http://localhost:8080/students/1
+
+###
+PATCH http://localhost:8080/students/1/avatar
+Content-Type: multipart/form-data boundary=WebAppBoundary
+
+
+
+--WebAppBoundary
+Content-Disposition: from-data; name="avatar"; filename="avatar.png"
+Content-Type: image/png
+
+< avatars/avatar.png
+--WebAppBoundary
+
+
+
+
