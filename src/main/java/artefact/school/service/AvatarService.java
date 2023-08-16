@@ -36,7 +36,7 @@ public class AvatarService {
             String fileName = UUID.randomUUID() + "." + extension;
             Path pathToAvatar = pathToAvatarDir.resolve(fileName);
             writeToFile(pathToAvatar, data);
-            //Files.write(pathToAvatar, data);
+            Files.write(pathToAvatar, data);
 
             Avatar avatar = avatarRepository.findByStudent_Id(student.getId())
                     .orElse(new Avatar());
