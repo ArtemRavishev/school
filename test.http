@@ -24,7 +24,7 @@ DELETE http://localhost:8080/students/1
 
 ###
 PATCH http://localhost:8080/students/1/avatar
-Content-Type: multipart/form-data boundary=WebAppBoundary
+Content-Type: multipart/form-data;boundary=WebAppBoundary
 
 
 
