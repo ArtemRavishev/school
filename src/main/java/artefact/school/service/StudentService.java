@@ -11,7 +11,11 @@ import artefact.school.maper.FacultyMapper;
 import artefact.school.maper.StudentMapper;
 import artefact.school.repository.FacultyRepository;
 import artefact.school.repository.StudentRepository;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -43,10 +47,8 @@ public class StudentService {
     public  StudentDtoOut uploadAvatar(long id,MultipartFile multipartFile) {
         Student student  = studentRepository.findById(id)
                 .orElseThrow(()->new StudentNotFondException(id));
-        Avatar avatar =avatarService.create(student,multipartFile);
-        StudentDtoOut studentDtoOut = studentMapper.toDto(student);
-        studentDtoOut.setAvatarUrl("http://localhost:8080/avatars/"+avatar.getId()+"/from-db");
-        return studentDtoOut;
+        avatarService.create(student,multipartFile);
+        return studentMapper.toDto(student);
     }
 
 
@@ -106,4 +108,29 @@ public class StudentService {
                 .map(facultyMapper::toDto)
                 .orElseThrow(()->new StudentNotFondException(id));
     }
+
+
+
+    public int getCountOfStudents() {
+        return studentRepository.getCountOfStudents();
+    }
+
+    public double getAverageAge() {
+        return studentRepository.getAverageAge();
+    }
+
+
+    @Transactional(readOnly=true)
+    public List<StudentDtoOut> lastStudents(int count) {
+        return studentRepository.lastStudents(Pageable.ofSize(count)).stream()
+                .map(studentMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+ //   @Transactional(readOnly=true)
+  //  public List<StudentDtoOut> lastStudents(int count) {
+  //      return studentRepository.lastStudents(count).stream()
+  //              .map(studentMapper::toDto)
+  //              .collect(Collectors.toList());
+ //   }
 }

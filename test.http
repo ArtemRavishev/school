@@ -35,6 +35,14 @@ Content-Type: image/png
 < avatars/avatar.png
 --WebAppBoundary
 
+###
+GET http://localhost:8080/students/lastStudents
 
+###
 
+GET http://localhost:8080/avatars
+
+###
+
+GET http://localhost:8080/avatars?page=10&size=10
 

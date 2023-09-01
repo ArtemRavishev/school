@@ -97,6 +97,8 @@ public class StudentControllerTest {
         assertThat(stringResponseEntity.getBody()).isEqualTo("Студент с id=" + incorrectId + " не найден");
     }
 
+
+
     public StudentDtoIn generate(){
         StudentDtoIn studentDtoIn=new StudentDtoIn();
         studentDtoIn.setAge(faker.random().nextInt(7,18));

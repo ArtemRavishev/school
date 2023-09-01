@@ -1,11 +1,14 @@
 package artefact.school.service;
 
+import artefact.school.dto.AvatarDto;
 import artefact.school.entity.Avatar;
 import artefact.school.entity.Student;
 import artefact.school.exception.AvatarNotFoundException;
 import artefact.school.exception.AvatarProcessingException;
+import artefact.school.maper.AvatarMapper;
 import artefact.school.repository.AvatarRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -14,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AvatarService {
@@ -23,9 +28,12 @@ public class AvatarService {
 
     private final Path pathToAvatarDir;
 
-    public AvatarService(AvatarRepository avatarRepository, @Value("${path.to.avatar.dir}") String pathToAvatarDir) {
+    private final AvatarMapper avatarMapper;
+
+    public AvatarService(AvatarRepository avatarRepository, @Value("${path.to.avatar.dir}") String pathToAvatarDir, AvatarMapper avatarMapper) {
         this.avatarRepository = avatarRepository;
         this.pathToAvatarDir = Path.of(pathToAvatarDir);
+        this.avatarMapper = avatarMapper;
     }
 
     public Avatar create(Student student, MultipartFile multipartFile) {
@@ -88,5 +96,11 @@ public class AvatarService {
         } catch (IOException e) {
             throw new AvatarProcessingException();
         }
+    }
+
+    public List<AvatarDto> getPage(int page, int size) {
+        return avatarRepository.findAll(PageRequest.of(page,size)).stream()
+                .map(avatarMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
