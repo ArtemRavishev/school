@@ -15,7 +15,7 @@
             </and>
         </preConditions>
 
-        <createIndex tableName="faculties" indexName="IDX_faculties_name_and_color">
+        <createIndex tableName="faculties" indexName="IDX_faculties_name_and_color" unique="true">
             <column name="name"/>
             <column name="color"/>
         </createIndex>

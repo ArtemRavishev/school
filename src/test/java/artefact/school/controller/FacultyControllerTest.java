@@ -4,6 +4,7 @@ package artefact.school.controller;
 import artefact.school.dto.FacultyDtoIn;
 import artefact.school.dto.FacultyDtoOut;
 import artefact.school.entity.Faculty;
+import artefact.school.maper.AvatarMapper;
 import artefact.school.maper.FacultyMapper;
 import artefact.school.maper.StudentMapper;
 import artefact.school.repository.FacultyRepository;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.Times;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,9 @@ public class FacultyControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private AvatarMapper avatarMapper;
 
     private final Faker faker = new Faker();
 

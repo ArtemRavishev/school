@@ -28,7 +28,7 @@
             <column name="data" type="OID" >
                 <constraints nullable="false"/>
             </column>
-            <column name="student_id" type="OID" >
+            <column name="student_id" type="BIGINT" >
                 <constraints nullable="false"/>
             </column>
 
