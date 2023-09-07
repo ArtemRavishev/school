@@ -46,3 +46,5 @@ GET http://localhost:8080/avatars
 
 GET http://localhost:8080/avatars?page=10&size=10
 
+###
+GET http://localhost:8081/getPort
