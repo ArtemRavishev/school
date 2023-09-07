@@ -11,5 +11,5 @@ CREATE INDEX IDX_students_name ON students(name);
 --changeset ravishev:2
 --preconditions onFail:MARK_RAN
 --precondition-sql-check expectedResult:0 select count(*)from pg_catalog.pg_tables t inner join pg_indexes i on i.tablename = t.tablename where t.tablename = 'faculties' and i.indexname ='idx_faculties_name_and_color'
---rollback DROP INDEX IDX_faculties_name_and_color
+--rollback DROP INDEX IDX_facultpublicies_name_and_color
 CREATE UNIQUE INDEX IDX_faculties_name_and_color ON faculties(name,color);
