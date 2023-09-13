@@ -14,7 +14,7 @@ public class FacultyMapper {
         FacultyDtoOut facultyDtoOut= new FacultyDtoOut();
         facultyDtoOut.setId(faculty.getId());
         facultyDtoOut.setName(faculty.getName());
-        facultyDtoOut.setColor(facultyDtoOut.getColor());
+        facultyDtoOut.setColor(faculty.getColor());
         return facultyDtoOut;
     }
 
