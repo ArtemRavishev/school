@@ -9,9 +9,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class SchoolExceptionHandler {
 
 
-@ExceptionHandler({FacultyNotFoundException.class,StudentNotFondException.class})
-    public ResponseEntity<?>handleNotFound(RuntimeException e){
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    @ExceptionHandler(
+            {FacultyNotFoundException.class,
+                    StudentNotFondException.class,
+                    AvatarNotFoundException.class})
+    public ResponseEntity<?> handleNotFound(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
 }
 
