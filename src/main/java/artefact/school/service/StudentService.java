@@ -156,6 +156,45 @@ public class StudentService {
                .getAsDouble();
     }
 
+    public void taskThread() {
+        List<Student> students = studentRepository.findAll();
+
+        printStudent(students.get(0));
+        printStudent(students.get(1));
+
+        new Thread(()->{
+        printStudent(students.get(2));
+        printStudent(students.get(4));
+        }).start();
+    }
+    private void printStudent(Student student) {
+        try {
+            Thread.sleep(1000);
+            LOG.info(student.toString());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+        public void taskThreadSync() {
+            List<Student> students = studentRepository.findAll();
+            LOG.info(students.toString());
+
+            printStudent(students.get(0));
+            printStudent(students.get(1));
+
+            new Thread(()->{
+                printStudent(students.get(2));
+                printStudent(students.get(3));
+            }).start();
+
+            new Thread(()->{
+                printStudent(students.get(4));
+                printStudent(students.get(5));
+            }).start();
+        }
+
+        private synchronized void printStudentSync (Student student) {
+       printStudent(student);
 
     //   @Transactional(readOnly=true)
   //  public List<StudentDtoOut> lastStudents(int count) {
@@ -164,3 +203,5 @@ public class StudentService {
   //              .collect(Collectors.toList());
  //   }
 }
+}
+
