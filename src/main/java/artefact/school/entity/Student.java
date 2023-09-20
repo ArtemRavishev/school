@@ -12,13 +12,18 @@ public class Student {
     private String name;
     private int age;
 
-    public Student(Long id, String name, int age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
+    @ManyToOne
+    @JoinColumn(name = "faculty_id")
+    private Faculty faculty;
+    @OneToOne(mappedBy = "student")
+    private Avatar avatar;
+
+    public Avatar getAvatar() {
+        return avatar;
     }
 
-    public Student() {
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
     }
 
     public Long getId() {
@@ -43,5 +48,24 @@ public class Student {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", faculty=" + faculty +
+                ", avatar=" + avatar +
+                '}';
     }
 }
