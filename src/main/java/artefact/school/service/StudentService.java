@@ -141,7 +141,23 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
- //   @Transactional(readOnly=true)
+    public List<String> getNamesStartWithA() {
+        return studentRepository.findAll().stream()
+                .map(student -> student.getName().toUpperCase())
+                .filter(name -> name.startsWith("A"))
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public double getAvgAge() {
+       return studentRepository.findAll().stream()
+               .mapToDouble(Student::getAge)
+               .average()
+               .getAsDouble();
+    }
+
+
+    //   @Transactional(readOnly=true)
   //  public List<StudentDtoOut> lastStudents(int count) {
   //      return studentRepository.lastStudents(count).stream()
   //              .map(studentMapper::toDto)

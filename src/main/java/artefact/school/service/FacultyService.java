@@ -12,9 +12,11 @@ import artefact.school.repository.FacultyRepository;
 import artefact.school.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class FacultyService {
@@ -83,5 +85,34 @@ public class FacultyService {
         return studentRepository.findAllByFaculty_Id(id).stream()
                 .map(studentMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public String getLongestName() {
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparing(String::length))
+                .get();
+    }
+
+    public Integer sum() {
+        long start=System.currentTimeMillis();
+        int res = Stream.iterate(1,a->a+1)
+                .limit(1_000_000)
+                .reduce(0,(a,b) -> a+b);
+        long finish=System.currentTimeMillis();
+        long dif = finish-start;
+        System.out.println("simple:"+dif);
+        return res;
+    }
+    public Integer sumImpr() {
+        long start=System.currentTimeMillis();
+        int res = Stream.iterate(1,a->a+1)
+                .parallel()
+                .limit(1_000_000)
+                .reduce(0,(a,b) -> a+b);
+        long finish=System.currentTimeMillis();
+        long dif = finish-start;
+        System.out.println("parallel:"+dif);
+        return res;
     }
 }

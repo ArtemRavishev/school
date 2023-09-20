@@ -77,7 +77,15 @@ public class StudentController {
     public List<StudentDtoOut> lastStudents(
             @RequestParam(value = "count" ,defaultValue = "5",required = false) int count) {
         return studentService.lastStudents(Math.abs(count));
-
-
     }
+    @GetMapping("/names-start-with-a")
+    public List<String> getNamesStartWithA(){
+        return studentService.getNamesStartWithA();
+    }
+    @GetMapping("/names-avg-age")
+    public double getAvgAge(){
+        return studentService.getAvgAge();
+    }
+
+
 }

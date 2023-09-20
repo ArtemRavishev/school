@@ -51,6 +51,20 @@ public class FacultyController {
     }
 
 
+    @GetMapping("/longest-name")
+    public String getLongestName() {
+        return facultyServicee.getLongestName();
+    }
+    @GetMapping("/sum")
+    public Integer sum() {
+        return facultyServicee.sum();
+    }
+    @GetMapping("/sum-impl")
+    public Integer sumImpl() {
+        return facultyServicee.sumImpr();
+    }
+
+
 
 
 }
