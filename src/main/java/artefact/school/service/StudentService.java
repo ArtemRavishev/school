@@ -179,17 +179,17 @@ public class StudentService {
             List<Student> students = studentRepository.findAll();
             LOG.info(students.toString());
 
-            printStudent(students.get(0));
-            printStudent(students.get(1));
+            printStudentSync(students.get(0));
+            printStudentSync(students.get(1));
 
             new Thread(()->{
-                printStudent(students.get(2));
-                printStudent(students.get(3));
+                printStudentSync(students.get(2));
+                printStudentSync(students.get(3));
             }).start();
 
             new Thread(()->{
-                printStudent(students.get(4));
-                printStudent(students.get(5));
+                printStudentSync(students.get(4));
+                printStudentSync(students.get(5));
             }).start();
         }
 
