@@ -2,6 +2,7 @@ package artefact.school.controller;
 
 import artefact.school.dto.FacultyDtoIn;
 import artefact.school.dto.FacultyDtoOut;
+import artefact.school.dto.StudentDtoOut;
 import artefact.school.service.FacultyService;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,8 @@ public class FacultyController {
     public FacultyDtoOut get(@PathVariable("id") long id){
         return facultyServicee.get(id);
     }
+
+
     @DeleteMapping("/{id}")
     public FacultyDtoOut delete(@PathVariable("id") long id){
         return facultyServicee.delete(id);
@@ -36,5 +39,32 @@ public class FacultyController {
     public List<FacultyDtoOut> findAll(@RequestParam( required = false)String color){
         return facultyServicee.findAll(color);
     }
+
+    @GetMapping("/filter")
+    public List<FacultyDtoOut> findByNameAndColorIgnoreCase(@RequestParam String name,@RequestParam String color){
+        return facultyServicee.findByNameAndColorIgnoreCase(name,color);
+    }
+
+    @GetMapping("/{id}/students")
+    public List<StudentDtoOut> findStudents(@PathVariable("id") long id){
+        return facultyServicee.findStudents(id);
+    }
+
+
+    @GetMapping("/longest-name")
+    public String getLongestName() {
+        return facultyServicee.getLongestName();
+    }
+    @GetMapping("/sum")
+    public Integer sum() {
+        return facultyServicee.sum();
+    }
+    @GetMapping("/sum-impl")
+    public Integer sumImpl() {
+        return facultyServicee.sumImpr();
+    }
+
+
+
 
 }
